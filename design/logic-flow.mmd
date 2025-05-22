@@ -1,29 +1,29 @@
 flowchart TD
-    start[Start PolySim] --> init[Initialize Application]
-    init --> menu{Select Mode}
+    A[["PolySim"]] --> B{Interface}
 
-%% Drawing Mode
-    menu --> draw[Drawing Mode]
-    draw --> place[Place Vertices]
-    place --> complete[Complete Polygon]
-    complete --> menu
+%% Drawing Flow
+    B --> C[Draw]
+    C --> D[/"Left-Click: Add Vertex<br>Right-Click: Complete Shape"/]
+    D --> E([New Polygon Created])
+    E --> A
 
-%% Physics Mode
-    menu --> physics[Physics Mode]
-    physics --> simulate[Run Simulation]
-    simulate --> menu
+%% Physics Flow
+    B --> F[Physics]
+    F --> G{"Toggle Simulation"}
+    G -->|On| H[Objects React to Physics]
+    G -->|Off| I[Static Display]
+    H & I --> A
 
-%% Customize Mode
-    menu --> customize[Customize Objects]
-    customize --> adjust[Adjust Properties]
-    adjust --> menu
+%% Customization Flow
+    B --> J[Customize]
+    J --> K[/"Select Object"/]
+    K --> L[/"Adjust Properties"/]
+    L --> M([Changes Applied])
+    M --> A
 
-%% File Operations
-    menu --> file{File Operations}
-    file --> save[Save Scene]
-    file --> load[Load Scene]
-    save --> menu
-    load --> menu
-
-%% Exit
-    menu --> exit[Exit Application]
+%% Scene Management
+    B --> N{Scene Options}
+    N -->|Save| P[/"Export Current Scene"/]
+    N -->|Load| Q[/"Import Saved Scene"/]
+    P & Q --> R([Scene Updated])
+    R --> M

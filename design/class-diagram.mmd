@@ -1,0 +1,116 @@
+classDiagram
+    class PolySim {
+        +main() void
+        +currentScene: Scene
+        +gui: GUI_Interface
+        +initPhysics() void
+    }
+
+    class GUI_Interface {
+        +drawingController: DrawingController
+        +physicsUI: PhysicsUI
+        +customizationPanel: CustomizationTool
+        +sceneDialog: SceneManager
+        +handleInput() void
+    }
+
+    class DrawingController {
+        +vertices: Vector~Point2D~
+        +currentShape: Polygon
+        +isDrawing: bool
+        +startShape() void
+        +addVertex(Point2D) void
+        +completeShape() void
+    }
+
+    class PhysicsEngine {
+        -gravity: Force
+        -globalForces: Vector~Force~
+        +isRunning: bool
+        +update(deltaTime: float) void
+        +togglePause() void
+        +addForce(Force) void
+    }
+
+    class Force {
+        +direction: Vector2D
+        +magnitude: float
+        +isGlobal: bool
+        +applyTo(Polygon) void
+    }
+
+    class CustomizationTool {
+        +selectedObject: Polygon
+        +propertyEditor: PropertyEditor
+        +selectObject(Polygon) void
+        +updateMass(float) void
+        +updateFriction(float) void
+        +updateColor(Color) void
+    }
+
+    class SceneManager {
+        +currentScene: Scene
+        +saveToFile(path: String) bool
+        +loadFromFile(path: String) bool
+        +serialize() byte[]
+        +deserialize(byte[]) Scene
+    }
+
+    class Polygon {
+        +vertices: Vector~Point2D~
+        +transform: Transform
+        +physics: PhysicsProperties
+        +appearance: Appearance
+        +forces: Vector~Force~
+        +update() void
+        +contains(Point2D): bool
+    }
+
+    class PhysicsProperties {
+        +mass: float
+        +friction: float
+        +bounciness: float
+        +isStatic: bool
+        +velocity: Vector2D
+        +applyForce(Force) void
+    }
+
+    class Transform {
+        +position: Vector2D
+        +rotation: float
+        +scale: Vector2D
+        +update() void
+    }
+
+    class Appearance {
+        +fillColor: Color
+        +borderColor: Color
+        +borderWidth: float
+    }
+
+    class Scene {
+        +objects: Vector~Polygon~
+        +physicsEngine: PhysicsEngine
+        +background: Color
+        +addObject(Polygon) void
+        +removeObject(Polygon) bool
+    }
+
+    PolySim --> GUI_Interface
+    PolySim --> Scene
+    GUI_Interface --> DrawingController
+    GUI_Interface --> PhysicsUI
+    GUI_Interface --> CustomizationTool
+    GUI_Interface --> SceneManager
+    DrawingController --> Polygon
+    PhysicsUI --> PhysicsEngine
+    PhysicsEngine --> Force
+    PhysicsEngine --> Polygon
+    CustomizationTool --> Polygon
+    SceneManager --> Scene
+    Scene --> Polygon
+    Scene --> PhysicsEngine
+    Polygon --> PhysicsProperties
+    Polygon --> Transform
+    Polygon --> Appearance
+    Polygon --> Force

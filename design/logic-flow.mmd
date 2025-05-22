@@ -1,0 +1,29 @@
+flowchart TD
+    start[Start PolySim] --> init[Initialize Application]
+    init --> menu{Select Mode}
+
+%% Drawing Mode
+    menu --> draw[Drawing Mode]
+    draw --> place[Place Vertices]
+    place --> complete[Complete Polygon]
+    complete --> menu
+
+%% Physics Mode
+    menu --> physics[Physics Mode]
+    physics --> simulate[Run Simulation]
+    simulate --> menu
+
+%% Customize Mode
+    menu --> customize[Customize Objects]
+    customize --> adjust[Adjust Properties]
+    adjust --> menu
+
+%% File Operations
+    menu --> file{File Operations}
+    file --> save[Save Scene]
+    file --> load[Load Scene]
+    save --> menu
+    load --> menu
+
+%% Exit
+    menu --> exit[Exit Application]

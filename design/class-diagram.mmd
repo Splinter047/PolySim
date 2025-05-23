@@ -1,28 +1,18 @@
 classDiagram
-%% Core Classes
-    class Scene {
-        -List~Polygon~ polygons
-        -Vector2 gravity
-        -Vector2 wind
-        +addPolygon(Polygon)
-        +removePolygon(Polygon)
-        +updatePhysics(deltaTime)
-        +serializeToFile(filename)
-        +deserializeFromFile(filename)
-    }
-
     class Polygon {
-        -List~Vector2~ vertices
+        -Vector2[] vertices
         -Transform transform
-        -Force force
-        -Color color
+        -Force physics
+        -Color fillColor
+        -Color outlineColor
+        -float mass
         -float friction
         -float bounciness
-        +draw()
-        +update()
         +addVertex(Vector2)
         +removeVertex(index)
         +isSelfIntersecting() bool
+        +update(float deltaTime)
+        +draw()
     }
 
     class Transform {
@@ -33,85 +23,75 @@ classDiagram
     }
 
     class Force {
-        -float mass
         -Vector2 velocity
         -Vector2 acceleration
         -bool isFixed
         +applyForce(Vector2)
-        +update(deltaTime)
+        +update(float deltaTime)
     }
 
-    class Vector2 {
-        -float x
-        -float y
-        +operator+(Vector2) Vector2
-        +operator*(float) Vector2
-        +magnitude() float
-        +normalize() Vector2
+    class Scene {
+        -Polygon[] objects
+        -Vector2 gravity
+        -Vector2 wind
+        +addObject(Polygon)
+        +updatePhysics(float deltaTime)
+        +serializeToFile(string filename)
+        +deserializeFromFile(string filename)
     }
 
-%% Physics System
-    class PhysicsWorld {
-        -List~Polygon~ rigidBodies
-        +checkCollisions()
-        +resolveCollisions()
-        +applyGlobalForces()
-    }
-
-    class CollisionInfo {
-        +Polygon a
-        +Polygon b
-        +Vector2 normal
-        +float depth
-        +Vector2 contactPoint
-    }
-
-%% Tools and Managers
     class PenTool {
-        -List~Vector2~ currentVertices
-        -bool isDrawing
+        -Vector2[] currentVertices
         +startNewPolygon()
         +addVertex(Vector2)
         +completePolygon() Polygon
     }
 
     class StateManager {
-        -currentState State
-        +changeState(State)
+        -State currentState
+        +changeState(State newState)
         +handleInput()
     }
 
     class FileManager {
-        +saveScene(Scene, filename)
-        +loadScene(filename) Scene
-        +savePolygon(Polygon, filename)
-        +loadPolygon(filename) Polygon
+        +saveScene(Scene, string filename)
+        +loadScene(string filename) Scene
+        +savePolygon(Polygon, string filename)
+        +loadPolygon(string filename) Polygon
+    }
+
+    class PhysicsWorld {
+        -Polygon[] collidables
+        +checkCollisions()
+        +resolveCollisions()
+        +applyGlobalForces()
     }
 
     class GUIController {
-        -Polygon selectedPolygon
+        -Polygon selectedObject
         +drawInterface()
-        +handleInput()
-        +updateSelectedParameters()
+        +updateObjectParameters()
     }
 
-%% Relationships
-    Scene "1" *-- "*" Polygon: contains
-    Scene --> PhysicsWorld: updates
     Polygon *-- Transform: composition
     Polygon *-- Force: composition
-    Polygon --> Vector2: uses
-    PhysicsWorld --> CollisionInfo: generates
-    PhysicsWorld --> Polygon: checks
-    PenTool --> Polygon: creates
+    Scene o-- Polygon: aggregation
+    Scene --> PhysicsWorld: updates
     StateManager --> PenTool: manages
     StateManager --> GUIController: manages
     GUIController --> Polygon: modifies
     FileManager --> Scene: serializes
     FileManager --> Polygon: serializes
+    PhysicsWorld --> Polygon: checks
 
-%% Notes
-    note for PhysicsWorld "Uses SAT algorithm for collision detection"
-    note for FileManager "Custom binary format with human-readable options"
-    note for Polygon "Supports self-intersection detection"
-    note for Force "Handles fixed/non-fixed objects differently"
+    class GameObject {
+        <<abstract>>
+        +update(float deltaTime)*
+        +draw()*
+    }
+
+    GameObject <|-- Polygon
+
+    note for PhysicsWorld "Uses SAT algorithm Contact point generation"
+    note for FileManager "Custom binary format Human-readable options"
+    note for Force "Handles gravity/friction Material properties"

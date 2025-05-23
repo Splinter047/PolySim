@@ -1,116 +1,117 @@
 classDiagram
-    class PolySim {
-        +main() void
-        +currentScene: Scene
-        +gui: GUI_Interface
-        +initPhysics() void
-    }
-
-    class GUI_Interface {
-        +drawingController: DrawingController
-        +physicsUI: PhysicsUI
-        +customizationPanel: CustomizationTool
-        +sceneDialog: SceneManager
-        +handleInput() void
-    }
-
-    class DrawingController {
-        +vertices: Vector~Point2D~
-        +currentShape: Polygon
-        +isDrawing: bool
-        +startShape() void
-        +addVertex(Point2D) void
-        +completeShape() void
-    }
-
-    class PhysicsEngine {
-        -gravity: Force
-        -globalForces: Vector~Force~
-        +isRunning: bool
-        +update(deltaTime: float) void
-        +togglePause() void
-        +addForce(Force) void
-    }
-
-    class Force {
-        +direction: Vector2D
-        +magnitude: float
-        +isGlobal: bool
-        +applyTo(Polygon) void
-    }
-
-    class CustomizationTool {
-        +selectedObject: Polygon
-        +propertyEditor: PropertyEditor
-        +selectObject(Polygon) void
-        +updateMass(float) void
-        +updateFriction(float) void
-        +updateColor(Color) void
-    }
-
-    class SceneManager {
-        +currentScene: Scene
-        +saveToFile(path: String) bool
-        +loadFromFile(path: String) bool
-        +serialize() byte[]
-        +deserialize(byte[]) Scene
+%% Core Classes
+    class Scene {
+        -List~Polygon~ polygons
+        -Vector2 gravity
+        -Vector2 wind
+        +addPolygon(Polygon)
+        +removePolygon(Polygon)
+        +updatePhysics(deltaTime)
+        +serializeToFile(filename)
+        +deserializeFromFile(filename)
     }
 
     class Polygon {
-        +vertices: Vector~Point2D~
-        +transform: Transform
-        +physics: PhysicsProperties
-        +appearance: Appearance
-        +forces: Vector~Force~
-        +update() void
-        +contains(Point2D): bool
-    }
-
-    class PhysicsProperties {
-        +mass: float
-        +friction: float
-        +bounciness: float
-        +isStatic: bool
-        +velocity: Vector2D
-        +applyForce(Force) void
+        -List~Vector2~ vertices
+        -Transform transform
+        -Force force
+        -Color color
+        -float friction
+        -float bounciness
+        +draw()
+        +update()
+        +addVertex(Vector2)
+        +removeVertex(index)
+        +isSelfIntersecting() bool
     }
 
     class Transform {
-        +position: Vector2D
-        +rotation: float
-        +scale: Vector2D
-        +update() void
+        -Vector2 position
+        -float rotation
+        -Vector2 scale
+        +getModelMatrix() Matrix2x2
     }
 
-    class Appearance {
-        +fillColor: Color
-        +borderColor: Color
-        +borderWidth: float
+    class Force {
+        -float mass
+        -Vector2 velocity
+        -Vector2 acceleration
+        -bool isFixed
+        +applyForce(Vector2)
+        +update(deltaTime)
     }
 
-    class Scene {
-        +objects: Vector~Polygon~
-        +physicsEngine: PhysicsEngine
-        +background: Color
-        +addObject(Polygon) void
-        +removeObject(Polygon) bool
+    class Vector2 {
+        -float x
+        -float y
+        +operator+(Vector2) Vector2
+        +operator*(float) Vector2
+        +magnitude() float
+        +normalize() Vector2
     }
 
-    PolySim --> GUI_Interface
-    PolySim --> Scene
-    GUI_Interface --> DrawingController
-    GUI_Interface --> PhysicsUI
-    GUI_Interface --> CustomizationTool
-    GUI_Interface --> SceneManager
-    DrawingController --> Polygon
-    PhysicsUI --> PhysicsEngine
-    PhysicsEngine --> Force
-    PhysicsEngine --> Polygon
-    CustomizationTool --> Polygon
-    SceneManager --> Scene
-    Scene --> Polygon
-    Scene --> PhysicsEngine
-    Polygon --> PhysicsProperties
-    Polygon --> Transform
-    Polygon --> Appearance
-    Polygon --> Force
+%% Physics System
+    class PhysicsWorld {
+        -List~Polygon~ rigidBodies
+        +checkCollisions()
+        +resolveCollisions()
+        +applyGlobalForces()
+    }
+
+    class CollisionInfo {
+        +Polygon a
+        +Polygon b
+        +Vector2 normal
+        +float depth
+        +Vector2 contactPoint
+    }
+
+%% Tools and Managers
+    class PenTool {
+        -List~Vector2~ currentVertices
+        -bool isDrawing
+        +startNewPolygon()
+        +addVertex(Vector2)
+        +completePolygon() Polygon
+    }
+
+    class StateManager {
+        -currentState State
+        +changeState(State)
+        +handleInput()
+    }
+
+    class FileManager {
+        +saveScene(Scene, filename)
+        +loadScene(filename) Scene
+        +savePolygon(Polygon, filename)
+        +loadPolygon(filename) Polygon
+    }
+
+    class GUIController {
+        -Polygon selectedPolygon
+        +drawInterface()
+        +handleInput()
+        +updateSelectedParameters()
+    }
+
+%% Relationships
+    Scene "1" *-- "*" Polygon: contains
+    Scene --> PhysicsWorld: updates
+    Polygon *-- Transform: composition
+    Polygon *-- Force: composition
+    Polygon --> Vector2: uses
+    PhysicsWorld --> CollisionInfo: generates
+    PhysicsWorld --> Polygon: checks
+    PenTool --> Polygon: creates
+    StateManager --> PenTool: manages
+    StateManager --> GUIController: manages
+    GUIController --> Polygon: modifies
+    FileManager --> Scene: serializes
+    FileManager --> Polygon: serializes
+
+%% Notes
+    note for PhysicsWorld "Uses SAT algorithm for collision detection"
+    note for FileManager "Custom binary format with human-readable options"
+    note for Polygon "Supports self-intersection detection"
+    note for Force "Handles fixed/non-fixed objects differently"

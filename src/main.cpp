@@ -5,11 +5,14 @@
 
 // Set global constants
 constexpr int SCREEN_WDITH = 800;
-constexpr int SCREEN_HEIGHT = 450;
+constexpr int SCREEN_HEIGHT = 600;
 
 // Programs entry point
 int main()
 {
+	setenv("WAYLAND_APP_ID", "raylib", 1);
+	SetConfigFlags(FLAG_WINDOW_HIGHDPI);
+
 	// Create window with the specified resolution and title
 	InitWindow(SCREEN_WDITH, SCREEN_HEIGHT, "PolySim");
 

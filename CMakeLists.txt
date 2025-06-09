@@ -5,6 +5,10 @@ project(PolySim) # Define your project name
 set(CMAKE_CXX_STANDARD 20) # Select the C++ Release to use
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # Set the selected release as a hard req
 
+# Force Wayland support in GLFW
+set(GLFW_BUILD_WAYLAND ON CACHE BOOL "" FORCE)
+set(GLFW_BUILD_X11 OFF CACHE BOOL "" FORCE)
+
 include(FetchContent) # Library/Feature to download over http
 
 FetchContent_Declare(

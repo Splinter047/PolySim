@@ -3,3 +3,4 @@
 /build/
 src/compile_commands.json
 src/.cache/
+.clang-format

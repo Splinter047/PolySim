@@ -5,9 +5,9 @@ project(PolySim) # Define your project name
 set(CMAKE_CXX_STANDARD 20) # Select the C++ Release to use
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # Set the selected release as a hard req
 
-# Force Wayland support in GLFW
-set(GLFW_BUILD_WAYLAND ON CACHE BOOL "" FORCE)
-set(GLFW_BUILD_X11 OFF CACHE BOOL "" FORCE)
+# GLFW doesn't play nice with Wayland
+set(GLFW_BUILD_WAYLAND OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_X11 ON CACHE BOOL "" FORCE)
 
 include(FetchContent) # Library/Feature to download over http
 
@@ -30,9 +30,11 @@ FetchContent_MakeAvailable(raylib raygui) # Clone the above defined repos
 
 add_executable(${PROJECT_NAME} src/main.cpp
         include/vector.h
-        include/Polygon.h
+        include/polygon.h
+		src/polygon.cpp
         include/transformation.h
-        include/Force.h) # Choose files to compile
+		include/pen_tool.h
+		src/pen_tool.cpp) # Choose files to compile
 
 # Needed for properly linking raygui
 set(GENERATED_HEADERS_DIR "${CMAKE_BINARY_DIR}/generated")

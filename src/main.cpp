@@ -1,53 +1,86 @@
-// Import raylib and raygui
 #include "raylib.h"
 #define RAYGUI_IMPLEMENTATION
+#include "../include/pen_tool.h"
+#include "../include/polygon.h"
 #include "raygui.h"
-#include "../include/vector.h"
 
-// Set global constants
-int SCREEN_WIDTH = 800;
-int SCREEN_HEIGHT = 600;
+enum class Editor_State
+{
+	Idle,
+	Drawing
+};
 
-// Programs entry point
+int SCREEN_WIDTH = 1000;
+int SCREEN_HEIGHT = 800;
+
 int main()
 {
-	// setenv("WAYLAND_APP_ID", "raylib", 1);
 	SetConfigFlags(FLAG_WINDOW_HIGHDPI);
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-
-	// Create window with the specified resolution and title
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "PolySim");
-
-	// Tick rate for our program
 	SetTargetFPS(60);
 
-	Vector<int> position(2, 100);
-	Vector<int> position2(2, 0);
-	float rotation = 0.0f;
+	Pen_Tool poly_pen;
+	Vector<Polygon *> polygons; // TODO: move to a new scene class
+	Editor_State cur_state = Editor_State::Idle;
 
-	// Main event loop
 	while (!WindowShouldClose())
 	{
-		if(IsWindowResized())
+		if (IsWindowResized())
 		{
 			SCREEN_WIDTH = GetScreenWidth();
 			SCREEN_HEIGHT = GetScreenHeight();
 		}
 
-		position2[0] = GetMousePosition().x;
-		position2[1] = GetMousePosition().y;
+		// State management TODO: Extract to new state management class
+		switch (cur_state)
+		{
+			case Editor_State::Idle:
+				if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+				{
+					poly_pen.startNewPolygon(GetMousePosition());
+					cur_state = Editor_State::Drawing;
+				}
+				break;
 
-		rotation += 0.2f;
-		// Start drawing to our window
+			case Editor_State::Drawing:
+				if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+
+					poly_pen.tryAddVertex(GetMousePosition());
+
+				if (IsKeyPressed(KEY_ENTER) ||
+					IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
+				{
+					Polygon *newPolygon = poly_pen.completePolygon();
+					if (newPolygon != nullptr) { polygons.push(newPolygon); }
+					cur_state = Editor_State::Idle;
+				}
+
+				if (IsKeyReleased(KEY_ESCAPE))
+				{
+					poly_pen.cancel();
+					cur_state = Editor_State::Idle;
+				}
+				break;
+		}
+
+		// Drawing
 		BeginDrawing();
+		{
+			ClearBackground(RAYWHITE);
 
-		ClearBackground(RAYWHITE);
+			// Draw polygons in our scene
+			for (int i = 0; i < polygons.size(); i++) { polygons[i]->draw(); }
 
-		DrawLine(position[0],position[1],position2[0],position2[1],RED);
-
+			// Draw preview when pen tool is active
+			if (cur_state == Editor_State::Drawing) { poly_pen.drawPreview(); }
+		}
 		EndDrawing();
 	}
 
-	// Close the window
+	// Cleanup
+	for (int i = 0; i < polygons.size(); i++) { delete polygons[i]; }
+
 	CloseWindow();
+	return 0;
 }

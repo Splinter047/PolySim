@@ -34,7 +34,11 @@ add_executable(${PROJECT_NAME} src/main.cpp
 		src/polygon.cpp
         include/transformation.h
 		include/pen_tool.h
-		src/pen_tool.cpp) # Choose files to compile
+		src/pen_tool.cpp
+		include/scene.h
+		src/scene.cpp
+		include/state_manager.h
+		src/state_manager.cpp) # Choose files to compile
 
 # Needed for properly linking raygui
 set(GENERATED_HEADERS_DIR "${CMAKE_BINARY_DIR}/generated")

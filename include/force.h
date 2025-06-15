@@ -5,6 +5,10 @@
 #include "transformation.h"
 #include "vector.h"
 
+/**
+ * @brief Holds current velocity and acceleration values and handles the physics
+ * solving for each new frame
+ */
 class Force
 {
 private:

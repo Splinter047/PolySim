@@ -75,12 +75,20 @@ Vector2 Polygon::transformVertex(const Vector2 &vertex) const
 				   rotated.y + transform.position.y};
 }
 
+/**
+ * @brief Invokes the force method for calculating the next transform and forces
+ * @param delta_time Frame time for physics calculations
+ * @param grav Gravity constant
+ */
 void Polygon::updatePhysics(float delta_time, Vector2 grav)
 {
 	Vector2 lowest_point = getLowestPoint();
 	force.update(delta_time, grav, transform, lowest_point);
 }
 
+/**
+ * @return Absolute position of the lowest vertex (closest to the floor)
+ */
 Vector2 Polygon::getLowestPoint() const
 {
 	float min = transformVertex(vertices[0]).y;

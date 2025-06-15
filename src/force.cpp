@@ -8,6 +8,13 @@ Force::Force()
 {
 }
 
+/**
+ * @brief Currently only applies gravity to the object
+ * @param delta_time Frame time for physics solving
+ * @param grav Gravity constant
+ * @param transform Transform object for the polygon we are solving
+ * @param lowest_point Bottom of the object
+ */
 void Force::update(float delta_time, Vector2 grav, Transformation &transform,
 				   Vector2 lowest_point)
 {
@@ -28,11 +35,10 @@ void Force::update(float delta_time, Vector2 grav, Transformation &transform,
 	float floor = GetScreenHeight() - 10;
 	float diff = floor - lowest_point.y;
 
-	if (diff < 0)
+	if (diff < 0 && velocity.y > 0)
 	{
 		transform.position.y += diff;
 		velocity.y *= -0.5f;
-		if (fabsf(velocity.y) < 10.0f) velocity.y = 0.0f;
 
 		float com_x = transform.position.x;
 		float torque = (com_x - lowest_point.x) * 0.2f;
@@ -40,9 +46,15 @@ void Force::update(float delta_time, Vector2 grav, Transformation &transform,
 	}
 
 	transform.rotation += angular_velocity * delta_time;
-	angular_velocity *= 0.9f;
+	angular_velocity *= 0.95f;
 }
 
+/**
+ * @brief Switches between static and not static
+ */
 void Force::toggleStatic() { is_static = !is_static; }
 
+/**
+ * @param _mass New value to set for mass
+ */
 void Force::setMass(float _mass) { mass = _mass; }

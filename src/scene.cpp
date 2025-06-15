@@ -1,6 +1,6 @@
 #include "../include/scene.h"
 
-Scene::Scene() {}
+Scene::Scene() : gravity({0.0f, 980.0f}), physics_enabled(false) {}
 
 Scene::~Scene() { clear(); }
 
@@ -26,6 +26,14 @@ void Scene::removeObject(int index)
 	}
 }
 
+void Scene::update(float delta_time)
+{
+	if (!physics_enabled) return;
+
+	for (int i = 0; i < objects.size(); ++i)
+		objects[i]->updatePhysics(delta_time, gravity);
+}
+
 /**
  * @brief Calls the draw for each polygon
  */
@@ -43,3 +51,5 @@ void Scene::clear()
 
 	objects.clear();
 }
+
+void Scene::togglePhysics() { physics_enabled = !physics_enabled; }

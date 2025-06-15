@@ -13,7 +13,9 @@ int main()
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "PolySim");
 	SetTargetFPS(60);
 
+	float delta_time = 0.0f;
 	Scene canvas;
+	canvas.togglePhysics();
 	StateManager state_manager(canvas);
 
 	while (!WindowShouldClose())
@@ -24,6 +26,8 @@ int main()
 			SCREEN_HEIGHT = GetScreenHeight();
 		}
 
+		delta_time = GetFrameTime();
+		canvas.update(delta_time);
 		state_manager.handleInput();
 
 		// Drawing

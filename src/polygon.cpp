@@ -80,3 +80,8 @@ Vector2 Polygon::transformVertex(const Vector2& vertex) const {
 		rotated.y + transform.pivot.y + transform.position.y
 	};
 }
+
+void Polygon::updatePhysics(float delta_time, Vector2 grav)
+{
+	force.update(delta_time, grav, transform);
+}

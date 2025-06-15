@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "vector.h"
 #include "transformation.h"
+#include "force.h"
 #include <cmath>
 
 /**
@@ -15,6 +16,7 @@ class Polygon {
 private:
     Vector<Vector2> vertices;
     Transformation transform;
+	Force force;
 
     Color outline_color;
     Color fill_color;
@@ -25,6 +27,7 @@ public:
 
     void draw() const;
 	Vector2 transformVertex(const Vector2 &vertex) const;
+	void updatePhysics(float delta_time, Vector2 grav);
     void setOutlineColor(Color color);
     void setFillColor(Color color);
 };

@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "vector.h"
 #include "transformation.h"
+#include <cmath>
 
 /**
  * @brief Polygon container, stores vertices such that the edges are drawn
@@ -23,6 +24,7 @@ public:
     Polygon(const Vector<Vector2>& _vertices, const Transformation &_transform);
 
     void draw() const;
+	Vector2 transformVertex(const Vector2 &vertex) const;
     void setOutlineColor(Color color);
     void setFillColor(Color color);
 };

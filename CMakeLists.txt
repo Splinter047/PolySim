@@ -38,7 +38,9 @@ add_executable(${PROJECT_NAME} src/main.cpp
 		include/scene.h
 		src/scene.cpp
 		include/state_manager.h
-		src/state_manager.cpp) # Choose files to compile
+		src/state_manager.cpp
+		include/force.h
+		src/force.cpp) # Choose files to compile
 
 # Needed for properly linking raygui
 set(GENERATED_HEADERS_DIR "${CMAKE_BINARY_DIR}/generated")

@@ -1,7 +1,8 @@
 #include "../include/pen_tool.h"
 
 Pen_Tool::Pen_Tool()
-	: preview_color(DARKGRAY), min_vert_dist(10.0f), min_area{100.0f} {
+	: preview_color(DARKGRAY), min_vert_dist(10.0f), min_area{100.0f}
+{
 }
 
 /**
@@ -60,11 +61,30 @@ void Pen_Tool::startNewPolygon(Vector2 start_pos)
 Polygon *Pen_Tool::completePolygon()
 {
 	if (current_vertices.size() < 3) return nullptr;
-
 	if (calcArea(current_vertices) < min_area) return nullptr;
 
+	Vector2 reference_pos = current_vertices[0];
+
+	Vector2 centroid = {0, 0};
+	for (int i = 0; i < current_vertices.size(); ++i)
+	{
+		centroid.x += current_vertices[i].x;
+		centroid.y += current_vertices[i].y;
+	}
+	centroid.x /= current_vertices.size();
+	centroid.y /= current_vertices.size();
+
 	Transformation transform;
-	Polygon *new_poly = new Polygon(current_vertices, transform);
+	transform.position = reference_pos;
+	transform.pivot = {centroid.x - reference_pos.x,
+					   centroid.y - reference_pos.y};
+
+	Vector<Vector2> relative_vertices;
+	for (int i = 0; i < current_vertices.size(); ++i)
+		relative_vertices.push({current_vertices[i].x - reference_pos.x,
+								current_vertices[i].y - reference_pos.y});
+
+	Polygon *new_poly = new Polygon(relative_vertices, transform);
 	new_poly->setOutlineColor(BLACK);
 	new_poly->setFillColor(LIGHTGRAY);
 

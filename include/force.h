@@ -7,8 +7,9 @@ class Force {
 private:
 	Vector2 velocity;
 	Vector2 accel;
-	bool is_fixed;
-};
+	bool is_static;
 
+	public:
+};
 
 #endif

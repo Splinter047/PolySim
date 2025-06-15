@@ -77,15 +77,20 @@ Vector2 Polygon::transformVertex(const Vector2 &vertex) const
 
 void Polygon::updatePhysics(float delta_time, Vector2 grav)
 {
-	float lowest_point = getLowestPoint();
+	Vector2 lowest_point = getLowestPoint();
 	force.update(delta_time, grav, transform, lowest_point);
 }
 
-float Polygon::getLowestPoint() const
+Vector2 Polygon::getLowestPoint() const
 {
 	float min = transformVertex(vertices[0]).y;
+	int min_idx = 0;
 	for (int i = 1; i < vertices.size(); ++i)
-		if (float y = transformVertex(vertices[i]).y; y > min) min = y;
+		if (float y = transformVertex(vertices[i]).y; y > min)
+		{
+			min = y;
+			min_idx = i;
+		}
 
-	return min;
+	return transformVertex(vertices[min_idx]);
 }

@@ -19,7 +19,7 @@ public:
 	Force();
 
 	void update(float delta_time, Vector2 grav, Transformation &transform,
-				float lowest_point);
+				Vector2 lowest_point);
 	void toggleStatic();
 	void setMass(float _mass);
 };

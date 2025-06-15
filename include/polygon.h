@@ -28,7 +28,7 @@ public:
     void draw() const;
 	Vector2 transformVertex(const Vector2 &vertex) const;
 	void updatePhysics(float delta_time, Vector2 grav);
-	float getLowestPoint() const;
+	Vector2 getLowestPoint() const;
 
     void setOutlineColor(Color color);
     void setFillColor(Color color);

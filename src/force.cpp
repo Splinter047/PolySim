@@ -9,7 +9,7 @@ Force::Force()
 }
 
 void Force::update(float delta_time, Vector2 grav, Transformation &transform,
-				   float lowest_point)
+				   Vector2 lowest_point)
 {
 	if (is_static) return;
 
@@ -24,11 +24,9 @@ void Force::update(float delta_time, Vector2 grav, Transformation &transform,
 	transform.position.x += velocity.x * delta_time;
 	transform.position.y += velocity.y * delta_time;
 
-	transform.rotation += angular_velocity * delta_time;
-
 	// Floor collision
 	float floor = GetScreenHeight() - 10;
-	float diff = floor - lowest_point;
+	float diff = floor - lowest_point.y;
 
 	if (diff < 0)
 	{
@@ -36,8 +34,13 @@ void Force::update(float delta_time, Vector2 grav, Transformation &transform,
 		velocity.y *= -0.5f;
 		if (fabsf(velocity.y) < 10.0f) velocity.y = 0.0f;
 
-		angular_velocity += velocity.x * 0.02f;
+		float com_x = transform.position.x;
+		float torque = (com_x - lowest_point.x) * 0.2f;
+		angular_velocity += torque;
 	}
+
+	transform.rotation += angular_velocity * delta_time;
+	angular_velocity *= 0.9f;
 }
 
 void Force::toggleStatic() { is_static = !is_static; }

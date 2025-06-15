@@ -1,6 +1,6 @@
 #include "../include/scene.h"
 
-Scene::Scene() : gravity({0.0f, 980.0f}), physics_enabled(false) {}
+Scene::Scene() : gravity({0.0f, 500.0f}), physics_enabled(false) {}
 
 Scene::~Scene() { clear(); }
 

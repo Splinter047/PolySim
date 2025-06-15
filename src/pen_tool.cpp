@@ -75,14 +75,14 @@ Polygon *Pen_Tool::completePolygon()
 	centroid.y /= current_vertices.size();
 
 	Transformation transform;
-	transform.position = reference_pos;
+	transform.position = centroid;
 	transform.pivot = {centroid.x - reference_pos.x,
 					   centroid.y - reference_pos.y};
 
 	Vector<Vector2> relative_vertices;
 	for (int i = 0; i < current_vertices.size(); ++i)
-		relative_vertices.push({current_vertices[i].x - reference_pos.x,
-								current_vertices[i].y - reference_pos.y});
+		relative_vertices.push({current_vertices[i].x - centroid.x,
+								current_vertices[i].y - centroid.y});
 
 	Polygon *new_poly = new Polygon(relative_vertices, transform);
 	new_poly->setOutlineColor(BLACK);

@@ -5,19 +5,22 @@
 #include "transformation.h"
 #include "vector.h"
 
-class Force {
+class Force
+{
 private:
 	Vector2 velocity;
 	Vector2 accel;
+	float angular_velocity;
+	float angular_accel;
 	bool is_static;
 	float mass;
 
-	public:
-
+public:
 	Force();
 
-	void update(float delta_time, Vector2 grav, Transformation &transform);
-	void setStatic(bool static_state);
+	void update(float delta_time, Vector2 grav, Transformation &transform,
+				float lowest_point);
+	void toggleStatic();
 	void setMass(float _mass);
 };
 

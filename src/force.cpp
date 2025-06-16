@@ -50,9 +50,9 @@ void Force::update(float delta_time, Vector2 grav, Transformation &transform,
 }
 
 /**
- * @brief Switches between static and not static
+ * @brief Sets is_static to passed state
  */
-void Force::toggleStatic() { is_static = !is_static; }
+void Force::setStatic(bool static_state) { is_static = static_state; }
 
 /**
  * @param _mass New value to set for mass

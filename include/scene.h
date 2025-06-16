@@ -24,6 +24,8 @@ public:
 	void togglePhysics();
     void draw() const;
     void clear();
+
+	Vector<Polygon*> getObjects() const;
 };
 
 #endif

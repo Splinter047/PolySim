@@ -10,7 +10,8 @@
 enum class Editor_State
 {
 	Idle,
-	Drawing
+	Drawing,
+	Controller
 };
 
 /**
@@ -24,8 +25,13 @@ private:
 	Pen_Tool pen_tool;
 	Editor_State current_state;
 
+	Polygon* selected_poly;
+	bool is_dragging;
+	Vector2 drag_offset;
+
 	void handleIdle();
 	void handleDrawing();
+	void handleController();
 
 public:
 	explicit StateManager(Scene &scene);

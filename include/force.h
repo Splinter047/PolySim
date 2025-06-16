@@ -24,7 +24,7 @@ public:
 
 	void update(float delta_time, Vector2 grav, Transformation &transform,
 				Vector2 lowest_point);
-	void toggleStatic();
+	void setStatic(bool static_state);
 	void setMass(float _mass);
 };
 

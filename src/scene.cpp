@@ -76,3 +76,5 @@ void Scene::clear()
  * @brief Does what it says
  */
 void Scene::togglePhysics() { physics_enabled = !physics_enabled; }
+
+Vector<Polygon*> Scene::getObjects() const { return objects; }

@@ -17,13 +17,13 @@ class Polygon
 {
 private:
 	Vector<Vector2> vertices;
-	Force force;
 
 	Color outline_color;
 	Color fill_color;
 
 public:
 	Transformation transform;
+	Force force;
 
 	Polygon();
 	Polygon(const Vector<Vector2> &_vertices, const Transformation &_transform);

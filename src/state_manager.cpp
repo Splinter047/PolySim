@@ -2,7 +2,7 @@
 
 StateManager::StateManager(Scene &scene)
 	: scene(scene), current_state(Editor_State::Idle), selected_poly(nullptr),
-	  is_dragging(false)
+	  is_dragging(false), drag_offset{0, 0}
 {
 }
 

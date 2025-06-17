@@ -50,6 +50,10 @@ void Scene::update(float delta_time)
 				objects[i]->transform.position.y -= mtv.y * 0.5f;
 				objects[j]->transform.position.x += mtv.x * 0.5f;
 				objects[j]->transform.position.y += mtv.y * 0.5f;
+
+				Vector2 cur_vel = objects[i]->force.getVelocity();
+				objects[i]->force.setVelocity(
+						{cur_vel.x * -0.2f, cur_vel.y * -0.2f});
 			}
 		}
 }
@@ -77,4 +81,4 @@ void Scene::clear()
  */
 void Scene::togglePhysics() { physics_enabled = !physics_enabled; }
 
-Vector<Polygon*> Scene::getObjects() const { return objects; }
+Vector<Polygon *> Scene::getObjects() const { return objects; }

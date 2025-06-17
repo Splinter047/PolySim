@@ -1,8 +1,8 @@
 #ifndef POLYGON_H
 #define POLYGON_H
 
-#include <cmath>
 #include <cfloat>
+#include <cmath>
 #include "force.h"
 #include "raylib.h"
 #include "transformation.h"
@@ -34,6 +34,7 @@ public:
 
 	Vector2 getLowestPoint() const;
 	bool checkCollision(const Polygon &other, Vector2 &mtv) const;
+	const Vector<Vector2> &getVertices() const { return vertices; }
 
 	void setOutlineColor(Color color);
 	void setFillColor(Color color);

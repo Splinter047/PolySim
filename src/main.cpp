@@ -1,7 +1,9 @@
 #include "raylib.h"
 #define RAYGUI_IMPLEMENTATION
+#include "raygui.h"
 #include "../include/scene.h"
 #include "../include/state_manager.h"
+#include "../include/file_manager.h"
 
 int SCREEN_WIDTH = 1000;
 int SCREEN_HEIGHT = 800;
@@ -36,6 +38,9 @@ int main()
 			ClearBackground(RAYWHITE);
 
 			state_manager.draw();
+
+			if (GuiButton(Rectangle(10, 10, 50, 30), "clear"))
+				canvas.clear();
 		}
 		EndDrawing();
 	}
